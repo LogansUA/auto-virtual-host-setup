@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Create dir for files
+mkdir /var/www/$1
+
+# Config info
+hostData="
+		<VirtualHost *:80>\n
+				\tServerName $1\n
+				\tServerAdmin webmaster@localhost\n
+				\tDocumentRoot /var/www/$1\n
+				\t<Directory /var/www/$1>\n
+						\t\tOptions Indexes FollowSymLinks MultiViews\n
+						\t\tAllowOverride All\n
+						\t\tOrder allow,deny\n
+						\t\tallow from all\n
+				\t</Directory>\n
+		</VirtualHost>"
+
+# Create config for apache2 server
+echo -e $hostData | sudo tee /etc/apache2/sites-available/$1.conf > /dev/null
+
+# Enable site from created config
+sudo a2ensite $1.conf
+
+# Append /etc/hosts
+sudo sed -i "3i 127.0.0.1\t$1" /etc/hosts
+
+# Restart apache2
+sudo service apache2 restart
