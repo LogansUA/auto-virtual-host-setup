@@ -55,25 +55,60 @@ sudo sed -i "3i $ip\t$project" $host
 # Restart apache2
 sudo service apache2 restart
 
-function wordpressInstall { # Done
+# Function for installing wordpress
+function wordpressInstall {
+	# Change path to created dir
   cd $server/$project
 
+	# Download latest wordpress
   wget http://wordpress.org/latest.tar.gz
 
+	# Untar archive with wordpress
   tar xvfz $server/$project/latest.tar.gz
 
+	# Move all files from wordpress dir to project dir
   mv $server/$project/wordpress/* $server/$project
 
+	# Delete archive and empty wordpress dir
   rm $server/$project/latest.tar.gz
   rm -rf $server/$project/wordpress
-
-  # mv $server/$project/wp-config-sample.php $server/$project/wp-config.php
 }
 
+# Function for installing opencart
+function opencartInstall {
+	# Current opencart version
+  ver="2.0.2.0"
+
+	# Change path to created dir
+  cd $server/$project
+
+	# Download opencart archive with given version
+  wget https://github.com/opencart/opencart/archive/$ver.tar.gz -O opencart.tar.gz
+
+	# Untar archive with opencart
+  tar xvfz $server/$project/opencart.tar.gz
+
+	# Move all files from opencart dir to project dir
+  mv $server/$project/opencart-$ver/upload/* $server/$project
+
+	# Delete archive and empty opencart dir
+  rm $server/$project/opencart.tar.gz
+  rm -rf $server/$project/opencart-$ver
+
+	# Rename configs for opencart
+  mv $server/$project/config-dist.php $server/$project/config.php
+  mv $server/$project/admin/config-dist.php $server/$project/admin/config.php
+}
+
+# Check if type is given
 if [ ! -z "$type" ]; then
+	# Use specific function depending on given type
 	case $type in
 	  ("Wordpress" | "wordpress" | "WordPress")
 			wordpressInstall
 	  ;;
+		("Opencart" | "opencart" | "OpenCart")
+			opencartInstall
+		;;
 	esac
 fi
