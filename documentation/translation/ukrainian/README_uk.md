@@ -15,26 +15,33 @@ $ git clone https://github.com/LogansUA/auto-virtual-host-setup.git
 
 **Команда**
 ```
-$ bash create-virtual-host
+$ bash avhs.sh
 ```
-**Результат**
+**Опис**
+
+Скрипт вирішує проблему створення віртуального хоста та дає змогу швидко розгорнути вибраний проект.
+
+**Приклад**
 ```
-Project name (new_project):
+Project name (new_project): project
 Server path (/var/www):
 Host path (/etc/hosts):
 IP host (127.0.0.1):
 
+Do you want to create some type of project? [Y/N]: y
+Insert type of project: symfony
 ```
-**Опис**
 
-Створення віртуального хоста.
-
-Тип аргументів - символьний та має приймати лише ASCII символи.
+**Результат**
+* Створено папку `project` за адресою `/var/www`;
+* Створено `project.conf` за адресою `/etc/apache2/sites-available`;
+* Активовано `project.conf`, що в свою чергу створило віртуальний хост за адресою `http://project/` (`http://127.0.0.1/`);
+* Створено та налаштовано новий проект `symfony` за адресою `/var/www/project`.
 
 **Алгоритм**
 
 При виконанні скрипту виконуються такі дії:
-* **введення параметрів** необхідних для створення віртуального хоста (`назва проекту`, `шлях до серверу`, `шлях до файлу хостів`, `ip хоста`).
+* **введення параметрів** необхідних для створення віртуального хоста (`назва проекту`, `шлях до серверу`, `шлях до файлу хостів`, `ip хоста`, `тип проекту` - якщо дан згоду).
 
   Якщо параметри не введені то використовуються **стандартні значення** (`new_project`, `/var/www`, `/etc/hosts`, `127.0.0.1`);
 
@@ -46,7 +53,15 @@ IP host (127.0.0.1):
 
 * **дописування ip хосту** в визначений файл хостів;
 
-* **перезавантаження `apache2` серверу**.
+* **перезавантаження `apache2` серверу**;
+
+* **розгортання проекту** в залежності від введеного типу.
+
+## Типи проектів
+Скрипт має змогу розгорнути декілька проектів:
+* [Symfony](https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/types/symfony.md);
+* [OpenCart]((https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/types/opencart.md));
+* [WordPress]((https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/types/wordpress.md)).
 
 ## Контакти
 * Для надання певної допомоги та співпраці, ознайомтесь з сторінкою [співробітництво](https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/contribution.md);
