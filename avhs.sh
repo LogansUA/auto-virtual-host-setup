@@ -8,7 +8,7 @@ read -p "IP host (127.0.0.1): " ip
 
 read -p "Do you want to create some type of project? [Y/N]: " yn
 
-case $yn in
+case "$yn" in
 	("y" | "Y" | "Yes" | "YES")
 		read -p "Insert type of project: " type
 	;;
@@ -37,11 +37,37 @@ fi
 # Create dir for files
 mkdir $server/$project
 
-# Read config info from file
-fileData=$(<host-config.conf)
-
-# Replace %name% with given argument
-hostData="${fileData//%name%/$project}"
+# Check if type is given
+if [ ! -z "$type" ]; then
+	# Use specific configuration depending on given type
+	if [ $type == "Symfony" ] || [ $type == "symfony" ]; then
+		hostData="
+			<VirtualHost *:80>\n
+					\tServerName $project\n
+					\tServerAdmin webmaster@localhost\n
+					\tDocumentRoot /var/www/$project/web\n
+					\t<Directory /var/www/$project/web>\n
+							\t\tOptions Indexes FollowSymLinks MultiViews\n
+							\t\tAllowOverride All\n
+							\t\tOrder allow,deny\n
+							\t\tallow from all\n
+					\t</Directory>\n
+			</VirtualHost>\n"
+	else
+		hostData="
+			<VirtualHost *:80>\n
+					\tServerName $project\n
+					\tServerAdmin webmaster@localhost\n
+					\tDocumentRoot /var/www/$project\n
+					\t<Directory /var/www/$project>\n
+							\t\tOptions Indexes FollowSymLinks MultiViews\n
+							\t\tAllowOverride All\n
+							\t\tOrder allow,deny\n
+							\t\tallow from all\n
+					\t</Directory>\n
+			</VirtualHost>\n"
+	fi
+fi
 
 # Create config for apache2 server
 echo -e $hostData | sudo tee /etc/apache2/sites-available/$project.conf > /dev/null
@@ -100,15 +126,50 @@ function opencartInstall {
   mv $server/$project/admin/config-dist.php $server/$project/admin/config.php
 }
 
+# Function for installing symfony
+function symfonyInstall {
+	# Check if symfony installer exist
+	if [ ! -f /usr/local/bin/symfony ]; then
+		read -p "Do you want to install symfony installer? [Y/N]: " yn
+
+		case "$yn" in
+			("y" | "Y" | "Yes" | "YES")
+				# Installing symfony installer
+				sudo curl -LsS http://symfony.com/installer -o /usr/local/bin/symfony
+				sudo chmod a+x /usr/local/bin/symfony
+			;;
+			("n" | "N" | "No" | "NO")
+				exit 0
+			;;
+		esac
+	fi
+
+	mask="$server/$project"
+
+	# Create symfony project based on user symfony installer
+	symfony new $mask
+
+	# Setting up Permissions
+	HTTPDUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1`
+	sudo setfacl -R -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX $mask/app/cache $mask/app/logs
+	sudo setfacl -dR -m u:"$HTTPDUSER":rwX -m u:`whoami`:rwX $mask/app/cache $mask/app/logs
+}
+
 # Check if type is given
 if [ ! -z "$type" ]; then
 	# Use specific function depending on given type
 	case $type in
+		# Wordpress installation
 	  ("Wordpress" | "wordpress" | "WordPress")
 			wordpressInstall
 	  ;;
+		# Opencart installation
 		("Opencart" | "opencart" | "OpenCart")
 			opencartInstall
+		;;
+		# Symfony installation
+		("Symfony" | "symfony")
+			symfonyInstall
 		;;
 	esac
 fi
