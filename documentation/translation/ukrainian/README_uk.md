@@ -59,10 +59,10 @@ Insert type of project: symfony
 
 ## Типи проектів
 Скрипт має змогу розгорнути декілька проектів:
-* [Symfony](https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/types/symfony.md);
-* [OpenCart]((https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/types/opencart.md));
-* [WordPress]((https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/types/wordpress.md)).
+* [Symfony](https://github.com/LogansUA/auto-virtual-host-setup/blob/develop/documentation/translation/ukrainian/types/symfony.md);
+* [OpenCart]((https://github.com/LogansUA/auto-virtual-host-setup/blob/develop/documentation/translation/ukrainian/types/opencart.md));
+* [WordPress]((https://github.com/LogansUA/auto-virtual-host-setup/blob/develop/documentation/translation/ukrainian/types/wordpress.md)).
 
 ## Контакти
-* Для надання певної допомоги та співпраці, ознайомтесь з сторінкою [співробітництво](https://github.com/LogansUA/auto-virtual-host-setup/blob/master/documentation/translation/ukrainian/contribution.md);
+* Для надання певної допомоги та співпраці, ознайомтесь з сторінкою [співробітництво](https://github.com/LogansUA/auto-virtual-host-setup/blob/develop/documentation/translation/ukrainian/contribution.md);
 * Для того, щоб зв'язатись з автором, пишіть за адресою `logansoleg@gmail.com`.
