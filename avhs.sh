@@ -146,6 +146,9 @@ function symfonyInstall {
 
 	mask="$server/$project"
 
+	# Self update symfony installer
+	symfony self-update
+
 	# Create symfony project based on user symfony installer
 	symfony new $mask
 
